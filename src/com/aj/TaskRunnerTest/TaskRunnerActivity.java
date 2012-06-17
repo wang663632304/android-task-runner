@@ -18,11 +18,10 @@ public class TaskRunnerActivity extends Activity implements TaskRunnerListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
         TaskRunner taskRunner = new TaskRunner(getApplicationContext(), this);
-        taskRunner.run(new MyTask());
-        taskRunner.run(new MyTask());
-        taskRunner.run(new MyTask());
-        taskRunner.run(new MyTask());
+        //taskRunner.run(new MyTask());
+        taskRunner.run(new HttpGetRequest("http://www.google.com"));
     }
 
 	@Override
