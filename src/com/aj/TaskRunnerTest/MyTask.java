@@ -34,6 +34,7 @@ public class MyTask extends Task {
         	StringBuffer buffer = new StringBuffer();
         	for(int i = 0; i < size; i++) {
         		buffer.append("A");
+        		progressListener.onProgressUpdate(i);
         	}
         	String data = buffer.toString();
     		getResultBundle().putString("my_result", data);

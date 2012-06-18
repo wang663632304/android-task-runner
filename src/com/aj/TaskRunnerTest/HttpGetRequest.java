@@ -21,10 +21,6 @@ public class HttpGetRequest extends Task {
 	public HttpGetRequest(Parcel in) {
 		super(in);
 	}
-	
-	public void writeToParcel(Parcel out, int flags) {
-    	super.writeToParcel(out, flags);
-    }
 
 	@Override
 	public void execute(TaskProgressListener progressListener) {
@@ -35,8 +31,9 @@ public class HttpGetRequest extends Task {
 			HttpResponse response = httpClient.execute(getRequest);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 	        response.getEntity().writeTo(out);
-	        out.close();
 	        result = out.toString();
+	        out.close();
+	        httpClient.close();
 		} catch (Exception e) {
 			result = "Error: Could not make http get request." + e.toString();
 		} finally {
