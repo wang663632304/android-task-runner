@@ -9,7 +9,8 @@ public abstract class Task implements Parcelable {
 	public static final String TAG = Task.class.getName();
 
 	
-	private Bundle bundle;
+	private Bundle result;
+	private Bundle params;
 	
 	public abstract void execute(TaskProgressListener progressListener);
 	
@@ -17,20 +18,26 @@ public abstract class Task implements Parcelable {
 		public void onProgressUpdate(int progress);
 	}
 	
-	public Task() {
-		bundle = new Bundle();
+	public Task(Bundle params) {
+		this.result = new Bundle();
+		this.params = params;
 	}
 	
 	public Task(Parcel in) {
-        bundle = in.readBundle();
+        this.result = in.readBundle();
+        this.params = in.readBundle();
     }
 	
-	public void setBundle(Bundle bundle) {
-		this.bundle = bundle;
+	public void setResultBundle(Bundle result) {
+		this.result = result;
 	}
 	
-	public Bundle getBundle() {
-		return bundle;
+	public Bundle getResultBundle() {
+		return this.result;
+	}
+	
+	public Bundle getParams() {
+		return params;
 	}
 
     public int describeContents() {
@@ -38,6 +45,7 @@ public abstract class Task implements Parcelable {
     }
 
     public void writeToParcel(Parcel out, int flags) {
-        out.writeBundle(bundle);
+        out.writeBundle(result);
+        out.writeBundle(params);
     }
 }

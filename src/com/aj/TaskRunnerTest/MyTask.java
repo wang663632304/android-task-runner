@@ -1,5 +1,6 @@
 package com.aj.TaskRunnerTest;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,8 +8,8 @@ import com.aj.TaskRunner.Task;
 
 public class MyTask extends Task {
 	
-	public MyTask() {
-		super();
+	public MyTask(Bundle params) {
+		super(params);
 	}
 	
 	public MyTask(Parcel in) {
@@ -35,7 +36,7 @@ public class MyTask extends Task {
         		buffer.append("A");
         	}
         	String data = buffer.toString();
-    		getBundle().putString("my_result", data);
+    		getResultBundle().putString("my_result", data);
     	} catch (Exception e) {
     		
     	}

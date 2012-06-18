@@ -21,7 +21,9 @@ public class TaskRunnerActivity extends Activity implements TaskRunnerListener {
         
         TaskRunner taskRunner = new TaskRunner(getApplicationContext(), this);
         //taskRunner.run(new MyTask());
-        taskRunner.run(new HttpGetRequest("http://www.google.com"));
+        Bundle params = new Bundle();
+        params.putString("url", "http://www.google.com");
+        taskRunner.run(new HttpGetRequest(params));
     }
 
 	@Override

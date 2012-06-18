@@ -39,7 +39,7 @@ public final class TaskRunnerIntent extends IntentService implements TaskProgres
 		final Bundle b = new Bundle();
 		final Task task = intent.getParcelableExtra(Constants.EXTRA_KEY_TASK);
 		task.execute(this);
-		b.putBundle(Constants.EXTRA_KEY_RESULT_BUNDLE, task.getBundle());
+		b.putBundle(Constants.EXTRA_KEY_RESULT_BUNDLE, task.getResultBundle());
 		receiver.send(Constants.TASK_COMPLETED, b);
 		
 	}

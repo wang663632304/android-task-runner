@@ -6,6 +6,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 
 import android.net.http.AndroidHttpClient;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,21 +14,16 @@ import com.aj.TaskRunner.Task;
 
 public class HttpGetRequest extends Task {
 	
-	private String url;
-	
-	public HttpGetRequest(String url) {
-		super();
-		this.url = url;
+	public HttpGetRequest(Bundle params) {
+		super(params);
 	}
 	
 	public HttpGetRequest(Parcel in) {
 		super(in);
-		url = in.readString();
 	}
 	
 	public void writeToParcel(Parcel out, int flags) {
     	super.writeToParcel(out, flags);
-        out.writeString(url);
     }
 
 	@Override
@@ -35,7 +31,7 @@ public class HttpGetRequest extends Task {
 		String result = null;
 		try {
 			AndroidHttpClient httpClient = AndroidHttpClient.newInstance("My User Agent");
-			HttpGet getRequest = new HttpGet(url);
+			HttpGet getRequest = new HttpGet(getParams().getString("url"));
 			HttpResponse response = httpClient.execute(getRequest);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 	        response.getEntity().writeTo(out);
@@ -44,7 +40,7 @@ public class HttpGetRequest extends Task {
 		} catch (Exception e) {
 			result = "Error: Could not make http get request." + e.toString();
 		} finally {
-			getBundle().putString("my_result", result);
+			getResultBundle().putString("my_result", result);
 		}		
 	}
 	
