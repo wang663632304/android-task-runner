@@ -2,12 +2,8 @@ package com.aj.TaskRunnerTest;
 
 import java.io.ByteArrayOutputStream;
 
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.net.http.AndroidHttpClient;
 import android.os.Parcel;
@@ -26,14 +22,20 @@ public class HttpGetRequest extends Task {
 	
 	public HttpGetRequest(Parcel in) {
 		super(in);
+		url = in.readString();
 	}
+	
+	public void writeToParcel(Parcel out, int flags) {
+    	super.writeToParcel(out, flags);
+        out.writeString(url);
+    }
 
 	@Override
 	public void execute(TaskProgressListener progressListener) {
 		String result = null;
 		try {
 			AndroidHttpClient httpClient = AndroidHttpClient.newInstance("My User Agent");
-			HttpGet getRequest = new HttpGet("http://www.google.com");
+			HttpGet getRequest = new HttpGet(url);
 			HttpResponse response = httpClient.execute(getRequest);
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
 	        response.getEntity().writeTo(out);
