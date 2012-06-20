@@ -25,18 +25,25 @@ public class HttpGetRequest extends Task {
 	@Override
 	public void execute(TaskProgressListener progressListener) {
 		String result = null;
+		AndroidHttpClient httpClient = null;
+		ByteArrayOutputStream out = null;
 		try {
-			AndroidHttpClient httpClient = AndroidHttpClient.newInstance("My User Agent");
+			httpClient = AndroidHttpClient.newInstance("My User Agent");
 			HttpGet getRequest = new HttpGet(getParams().getString("url"));
 			HttpResponse response = httpClient.execute(getRequest);
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			out = new ByteArrayOutputStream();
 	        response.getEntity().writeTo(out);
 	        result = out.toString();
-	        out.close();
-	        httpClient.close();
 		} catch (Exception e) {
 			result = "Error: Could not make http get request." + e.toString();
 		} finally {
+			try {
+				out.close();
+			} catch (Exception e) {}
+			try {
+				httpClient.close();
+			} catch (Exception e){}
+			
 			getResultBundle().putString("my_result", result);
 		}		
 	}
