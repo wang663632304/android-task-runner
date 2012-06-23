@@ -14,13 +14,15 @@ public class TaskRunnerActivity extends Activity implements TaskRunnerListener {
 	
 	public static final String TAG = TaskRunnerActivity.class.getName();
 	
+	private TaskRunner taskRunner;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        TaskRunner taskRunner = TaskRunner.getInstance(getApplicationContext());
+        taskRunner = TaskRunner.getInstance(getApplicationContext());
         //taskRunner.run(new MyTask());
         Bundle params = new Bundle();
         params.putString("url", "http://www.google.com");
@@ -35,7 +37,7 @@ public class TaskRunnerActivity extends Activity implements TaskRunnerListener {
     protected void onDestroy() {
     	super.onDestroy();
     	Log.d(TAG, "On Destroy is called");
-    	TaskRunner.getInstance(getApplicationContext()).cancel();
+    	taskRunner.cancel();
     }
 
 	@Override
@@ -50,5 +52,9 @@ public class TaskRunnerActivity extends Activity implements TaskRunnerListener {
 	public void onTaskProgressUpdated(int progress) {
 		Log.d(TAG, "Progress updated " + progress);
 		
+	}
+	
+	public TaskRunner getTaskRunner() {
+		return taskRunner;
 	}
 }
