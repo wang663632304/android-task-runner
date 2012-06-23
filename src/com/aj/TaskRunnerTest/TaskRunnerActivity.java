@@ -1,6 +1,7 @@
 package com.aj.TaskRunnerTest;
 
 import com.aj.TaskRunner.Constants;
+import com.aj.TaskRunner.Task;
 import com.aj.TaskRunner.TaskRunner;
 import com.aj.TaskRunner.TaskRunner.TaskRunnerListener;
 import com.aj.projects.net.R;
@@ -19,18 +20,29 @@ public class TaskRunnerActivity extends Activity implements TaskRunnerListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        TaskRunner taskRunner = new TaskRunner(getApplicationContext(), this);
+        TaskRunner taskRunner = TaskRunner.getInstance(getApplicationContext());
         //taskRunner.run(new MyTask());
         Bundle params = new Bundle();
         params.putString("url", "http://www.google.com");
-        taskRunner.run(new HttpGetRequest(params));
-        
-        taskRunner.run(new MyTask(new Bundle()));
+        taskRunner.run(new HttpGetRequest(params), this);
+        taskRunner.run(new MyTask(new Bundle()), this);
+        taskRunner.run(new MyTask(new Bundle()), this);
+        taskRunner.run(new MyTask(new Bundle()), this);
+        taskRunner.run(new MyTask(new Bundle()), this);
+    }
+    
+    @Override
+    protected void onDestroy() {
+    	super.onDestroy();
+    	Log.d(TAG, "On Destroy is called");
+    	TaskRunner.getInstance(getApplicationContext()).cancel();
     }
 
 	@Override
 	public void onTaskCompleted(Bundle result) {
-		String myString = result.getBundle(Constants.EXTRA_KEY_RESULT_BUNDLE).getString("my_result");
+		Task task = result.getParcelable(Constants.EXTRA_KEY_TASK);
+		Bundle taskResult = task.getResultBundle();
+		String myString = taskResult.getString("my_result");
 		Log.d(TAG, "Result recieved: " + myString);
 	}
 	
