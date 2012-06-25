@@ -8,17 +8,17 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
 
-public final class TaskRunnerIntent extends IntentService implements TaskProgressListener {
+public final class TaskRunnerIntentService extends IntentService implements TaskProgressListener {
 	
-	public static final String TAG = TaskRunnerIntent.class.getName();
+	public static final String TAG = TaskRunnerIntentService.class.getName();
 	
 	private ResultReceiver receiver;
 	
-	public TaskRunnerIntent() {
-		this(TaskRunnerIntent.class.getName());
+	public TaskRunnerIntentService() {
+		this(TaskRunnerIntentService.class.getName());
 	}
 
-	public TaskRunnerIntent(String name) {
+	public TaskRunnerIntentService(String name) {
 		super(name);
 	}
 	

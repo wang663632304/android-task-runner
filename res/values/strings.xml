@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, NetworkRequestIntentServiceActivity!</string>
-    <string name="app_name">NetworkRequestIntentService</string>
+    <string name="hello">IntentService based threading</string>
+    <string name="app_name">Intent Service Threading</string>
 
 </resources>

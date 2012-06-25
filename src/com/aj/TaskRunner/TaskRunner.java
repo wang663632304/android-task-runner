@@ -29,7 +29,7 @@ public class TaskRunner {
 	private TaskRunner(Context context) {
 		this.context = context;
 		this.listeners = new HashSet<TaskRunner.TaskRunnerListener>();
-		this.intent = new Intent(context, TaskRunnerIntent.class);
+		this.intent = new Intent(context, TaskRunnerIntentService.class);
 	}
 	
 	public void run(Task task, TaskRunnerListener listener) {

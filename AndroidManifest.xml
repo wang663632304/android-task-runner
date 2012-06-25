@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:enabled="true" android:name="com.aj.TaskRunner.TaskRunnerIntent" />
+        <service android:enabled="true" android:name="com.aj.TaskRunner.TaskRunnerIntentService" />
     </application>
 
 </manifest>
