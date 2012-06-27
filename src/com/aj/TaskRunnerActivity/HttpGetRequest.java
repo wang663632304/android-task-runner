@@ -23,7 +23,7 @@ public class HttpGetRequest extends Task {
 	}
 
 	@Override
-	public void execute(TaskProgressListener progressListener) {
+	public void execute(TaskProgressListener progressListener, Task task) {
 		String result = null;
 		AndroidHttpClient httpClient = null;
 		ByteArrayOutputStream out = null;

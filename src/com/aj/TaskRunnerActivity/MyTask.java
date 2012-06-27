@@ -28,16 +28,15 @@ public class MyTask extends Task {
     };
     
     @Override
-	public void execute(TaskProgressListener progressListener) {
+	public void execute(TaskProgressListener progressListener, Task task) {
     	try {
-    		Thread.sleep(1000);
-    		int size = 50;
+    		int size = 10;
         	StringBuffer buffer = new StringBuffer();
         	for(int i = 0; i < size; i++) {
         		try {
-        			Thread.sleep(1000);
+        			Thread.sleep(100);
         			buffer.append("A");
-            		progressListener.onProgressUpdate(i);
+            		progressListener.onProgressUpdate(i, task);
         		} catch(Exception e){
         			Log.e(TAG, "Thread interrupt exception was thrown");
         		}

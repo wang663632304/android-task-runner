@@ -1,6 +1,6 @@
 package com.aj.TaskRunner;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,7 @@ public class TaskRunner {
 	private static TaskRunner instance;
 	
 	private Context context;
-	private HashSet<TaskRunnerListener> listeners;
+	private HashMap<String, TaskRunnerListener> listeners;
 	
 	private Intent intent;
 	
@@ -28,12 +28,14 @@ public class TaskRunner {
 
 	private TaskRunner(Context context) {
 		this.context = context;
-		this.listeners = new HashSet<TaskRunner.TaskRunnerListener>();
+		this.listeners = new HashMap<String, TaskRunner.TaskRunnerListener>();
 		this.intent = new Intent(context, TaskRunnerIntentService.class);
 	}
 	
 	public void run(Task task, TaskRunnerListener listener) {
-		this.listeners.add(listener);
+		final String taskId = task.getClass().getName();
+		task.setId(taskId);
+		this.listeners.put(taskId, listener);
 		intent.putExtra(Constants.EXTRA_KEY_RECEIVER, new ResultHandler(null));
 		intent.putExtra(Constants.EXTRA_KEY_TASK, task);
 		context.startService(intent);
@@ -56,14 +58,14 @@ public class TaskRunner {
 
 		@Override
 		protected void onReceiveResult (int resultCode, Bundle resultData) {
-			
-			for(TaskRunnerListener trl : listeners) {
-				if(resultCode == Constants.TASK_COMPLETED) {
-					trl.onTaskCompleted(resultData);
-				} 
-				if(resultCode == Constants.TASK_PROGRESS_UPDATED) {
-					trl.onTaskProgressUpdated(resultData.getInt(Constants.EXTRA_KEY_PROGRESS_UPDATED));
-				}
+			Task task = resultData.getParcelable(Constants.EXTRA_KEY_TASK);
+			String taskId = task.getId();
+			TaskRunnerListener trl = listeners.get(taskId);
+			if(resultCode == Constants.TASK_COMPLETED) {
+				trl.onTaskCompleted(resultData);
+			} 
+			if(resultCode == Constants.TASK_PROGRESS_UPDATED) {
+				trl.onTaskProgressUpdated(resultData.getInt(Constants.EXTRA_KEY_PROGRESS_UPDATED));
 			}
 		}
 	}

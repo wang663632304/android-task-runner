@@ -38,15 +38,16 @@ public final class TaskRunnerIntentService extends IntentService implements Task
 		receiver = intent.getParcelableExtra(Constants.EXTRA_KEY_RECEIVER);
 		final Bundle b = new Bundle();
 		final Task task = intent.getParcelableExtra(Constants.EXTRA_KEY_TASK);
-		task.execute(this);
+		task.execute(this, task);
 		b.putParcelable(Constants.EXTRA_KEY_TASK, task);
 		receiver.send(Constants.TASK_COMPLETED, b);
 		
 	}
 
 	@Override
-	public void onProgressUpdate(int progress) {
+	public void onProgressUpdate(int progress, Task task) {
 		final Bundle b = new Bundle();
+		b.putParcelable(Constants.EXTRA_KEY_TASK, task);
 		b.putInt(Constants.EXTRA_KEY_PROGRESS_UPDATED, progress);
 		receiver.send(Constants.TASK_PROGRESS_UPDATED, b);
 	}

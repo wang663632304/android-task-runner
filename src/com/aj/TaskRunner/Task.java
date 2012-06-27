@@ -11,11 +11,12 @@ public abstract class Task implements Parcelable {
 	
 	private Bundle result;
 	private Bundle params;
+	private String id;
 	
-	public abstract void execute(TaskProgressListener progressListener);
+	public abstract void execute(TaskProgressListener progressListener, Task task);
 	
 	public interface TaskProgressListener {
-		public void onProgressUpdate(int progress);
+		public void onProgressUpdate(int progress, Task task);
 	}
 	
 	public Task(Bundle params) {
@@ -26,6 +27,7 @@ public abstract class Task implements Parcelable {
 	public Task(Parcel in) {
         this.result = in.readBundle();
         this.params = in.readBundle();
+        this.id = in.readString();
     }
 	
 	public void setResultBundle(Bundle result) {
@@ -47,5 +49,14 @@ public abstract class Task implements Parcelable {
     public void writeToParcel(Parcel out, int flags) {
         out.writeBundle(result);
         out.writeBundle(params);
+        out.writeString(id);
+    }
+    
+    protected void setId(String id) {
+    	this.id = id;
+    }
+    
+    protected String getId() {
+    	return this.id;
     }
 }
