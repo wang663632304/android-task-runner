@@ -1,6 +1,7 @@
 package com.aj.TaskRunner;
 
-import java.util.HashMap;
+import java.lang.ref.WeakReference;
+import java.util.WeakHashMap;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,9 +16,7 @@ public class TaskRunner {
 	private static TaskRunner instance;
 	
 	private Context context;
-	private HashMap<String, TaskRunnerListener> listeners;
-	
-	private Intent intent;
+	private WeakHashMap<String, WeakReference<TaskRunnerListener>> listeners;
 	
 	public static TaskRunner getInstance(Context context) {
 		if(instance == null) {
@@ -28,21 +27,17 @@ public class TaskRunner {
 
 	private TaskRunner(Context context) {
 		this.context = context;
-		this.listeners = new HashMap<String, TaskRunner.TaskRunnerListener>();
-		this.intent = new Intent(context, TaskRunnerIntentService.class);
+		this.listeners = new WeakHashMap<String, WeakReference<TaskRunnerListener>>();
 	}
 	
-	public void run(Task task, TaskRunnerListener listener) {
-		final String taskId = task.getClass().getName();
+	public void run(Task task, Class <?> serviceClass, TaskRunnerListener listener) {
+		final String taskId = task.toString();
 		task.setId(taskId);
-		this.listeners.put(taskId, listener);
+		this.listeners.put(taskId, new WeakReference<TaskRunnerListener>(listener));
+		Intent intent = new Intent(context, serviceClass);
 		intent.putExtra(Constants.EXTRA_KEY_RECEIVER, new ResultHandler(null));
 		intent.putExtra(Constants.EXTRA_KEY_TASK, task);
 		context.startService(intent);
-	}
-	
-	public void cancel() {
-		context.stopService(intent);
 	}
 	
 	public interface TaskRunnerListener {
@@ -60,12 +55,15 @@ public class TaskRunner {
 		protected void onReceiveResult (int resultCode, Bundle resultData) {
 			Task task = resultData.getParcelable(Constants.EXTRA_KEY_TASK);
 			String taskId = task.getId();
-			TaskRunnerListener trl = listeners.get(taskId);
-			if(resultCode == Constants.TASK_COMPLETED) {
-				trl.onTaskCompleted(resultData);
-			} 
-			if(resultCode == Constants.TASK_PROGRESS_UPDATED) {
-				trl.onTaskProgressUpdated(resultData.getInt(Constants.EXTRA_KEY_PROGRESS_UPDATED));
+			TaskRunnerListener listener = listeners.get(taskId).get();
+			if(listener != null) {
+				if(resultCode == Constants.TASK_COMPLETED) {
+					listener.onTaskCompleted(resultData);
+					listeners.remove(taskId);
+				} 
+				if(resultCode == Constants.TASK_PROGRESS_UPDATED) {
+					listener.onTaskProgressUpdated(resultData.getInt(Constants.EXTRA_KEY_PROGRESS_UPDATED));
+				}
 			}
 		}
 	}

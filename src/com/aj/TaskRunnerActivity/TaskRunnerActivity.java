@@ -3,6 +3,7 @@ package com.aj.TaskRunnerActivity;
 import com.aj.TaskRunner.Constants;
 import com.aj.TaskRunner.Task;
 import com.aj.TaskRunner.TaskRunner;
+import com.aj.TaskRunner.TaskRunnerIntentService;
 import com.aj.TaskRunner.TaskRunner.TaskRunnerListener;
 import com.aj.projects.net.R;
 
@@ -26,18 +27,17 @@ public class TaskRunnerActivity extends Activity implements TaskRunnerListener {
         //taskRunner.run(new MyTask());
         Bundle params = new Bundle();
         params.putString("url", "http://www.google.com");
-        taskRunner.run(new HttpGetRequest(params), this);
-        taskRunner.run(new MyTask(new Bundle()), this);
-        taskRunner.run(new MyTask(new Bundle()), this);
-        taskRunner.run(new MyTask(new Bundle()), this);
-        taskRunner.run(new MyTask(new Bundle()), this);
+        taskRunner.run(new HttpGetRequest(params), TaskRunnerIntentService.class, this);
+        taskRunner.run(new MyTask(new Bundle()), TaskRunnerIntentService.class, this);
+        taskRunner.run(new MyTask(new Bundle()), TaskRunnerIntentService.class, this);
+        taskRunner.run(new MyTask(new Bundle()), TaskRunnerIntentService.class, this);
+        taskRunner.run(new MyTask(new Bundle()), TaskRunnerIntentService.class, this);
     }
     
     @Override
     protected void onDestroy() {
     	super.onDestroy();
     	Log.d(TAG, "On Destroy is called");
-    	taskRunner.cancel();
     }
 
 	@Override
@@ -51,10 +51,5 @@ public class TaskRunnerActivity extends Activity implements TaskRunnerListener {
 	@Override
 	public void onTaskProgressUpdated(int progress) {
 		Log.d(TAG, "Progress updated " + progress);
-		
-	}
-	
-	public TaskRunner getTaskRunner() {
-		return taskRunner;
 	}
 }

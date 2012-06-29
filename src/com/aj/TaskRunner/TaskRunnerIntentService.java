@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
 
-public final class TaskRunnerIntentService extends IntentService implements TaskProgressListener {
+public class TaskRunnerIntentService extends IntentService implements TaskProgressListener {
 	
 	public static final String TAG = TaskRunnerIntentService.class.getName();
 	
