@@ -11,7 +11,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 
-public class TaskRunnerActivity extends Activity implements TaskRunnerListener {
+public class TaskRunnerActivity extends Activity {
 	
 	public static final String TAG = TaskRunnerActivity.class.getName();
 	
@@ -27,11 +27,11 @@ public class TaskRunnerActivity extends Activity implements TaskRunnerListener {
         //taskRunner.run(new MyTask());
         Bundle params = new Bundle();
         params.putString("url", "http://www.google.com");
-        taskRunner.run(new HttpGetRequest(params), TaskRunnerIntentService.class, this);
-        taskRunner.run(new MyTask(new Bundle()), TaskRunnerIntentService.class, this);
-        taskRunner.run(new MyTask(new Bundle()), TaskRunnerIntentService.class, this);
-        taskRunner.run(new MyTask(new Bundle()), TaskRunnerIntentService.class, this);
-        taskRunner.run(new MyTask(new Bundle()), TaskRunnerIntentService.class, this);
+        taskRunner.run(new HttpGetRequest(params), MyIntentService.class, new MyListener1());
+        taskRunner.run(new MyTask(new Bundle()), MyIntentService.class, new MyListener1());
+        taskRunner.run(new MyTask(new Bundle()), MyIntentService.class, new MyListener2());
+        taskRunner.run(new MyTask(new Bundle()), TaskRunnerIntentService.class, new MyListener1());
+        taskRunner.run(new MyTask(new Bundle()), TaskRunnerIntentService.class, new MyListener2());
     }
     
     @Override
@@ -39,17 +39,34 @@ public class TaskRunnerActivity extends Activity implements TaskRunnerListener {
     	super.onDestroy();
     	Log.d(TAG, "On Destroy is called");
     }
-
-	@Override
-	public void onTaskCompleted(Bundle result) {
-		Task task = result.getParcelable(Constants.EXTRA_KEY_TASK);
-		Bundle taskResult = task.getResultBundle();
-		String myString = taskResult.getString("my_result");
-		Log.d(TAG, "Result recieved: " + myString);
-	}
-	
-	@Override
-	public void onTaskProgressUpdated(int progress) {
-		Log.d(TAG, "Progress updated " + progress);
-	}
+    
+    private class MyListener1 implements TaskRunnerListener {
+    	@Override
+    	public void onTaskCompleted(Bundle result) {
+    		Task task = result.getParcelable(Constants.EXTRA_KEY_TASK);
+    		Bundle taskResult = task.getResultBundle();
+    		String myString = taskResult.getString("my_result");
+    		Log.d(TAG, "Result recieved by Listener 1: " + myString);
+    	}
+    	
+    	@Override
+    	public void onTaskProgressUpdated(int progress) {
+    		Log.d(TAG, "Progress updated by Listener 1: " + progress);
+    	}
+    }
+    
+    private class MyListener2 implements TaskRunnerListener {
+    	@Override
+    	public void onTaskCompleted(Bundle result) {
+    		Task task = result.getParcelable(Constants.EXTRA_KEY_TASK);
+    		Bundle taskResult = task.getResultBundle();
+    		String myString = taskResult.getString("my_result");
+    		Log.d(TAG, "Result recieved by Listener 2: " + myString);
+    	}
+    	
+    	@Override
+    	public void onTaskProgressUpdated(int progress) {
+    		Log.d(TAG, "Progress updated by Listener 2: " + progress);
+    	}
+    }
 }

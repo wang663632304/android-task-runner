@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <service android:enabled="true" android:name="com.aj.TaskRunner.TaskRunnerIntentService" />
+        <service android:enabled="true" android:name="com.aj.TaskRunnerActivity.MyIntentService" />
     </application>
 
 </manifest>

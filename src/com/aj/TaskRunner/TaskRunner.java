@@ -1,7 +1,6 @@
 package com.aj.TaskRunner;
 
-import java.lang.ref.WeakReference;
-import java.util.WeakHashMap;
+import java.util.HashMap;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +15,7 @@ public class TaskRunner {
 	private static TaskRunner instance;
 	
 	private Context context;
-	private WeakHashMap<String, WeakReference<TaskRunnerListener>> listeners;
+	private HashMap<String, TaskRunnerListener> listeners;
 	
 	public static TaskRunner getInstance(Context context) {
 		if(instance == null) {
@@ -27,13 +26,13 @@ public class TaskRunner {
 
 	private TaskRunner(Context context) {
 		this.context = context;
-		this.listeners = new WeakHashMap<String, WeakReference<TaskRunnerListener>>();
+		this.listeners = new HashMap<String, TaskRunnerListener>();
 	}
 	
 	public void run(Task task, Class <?> serviceClass, TaskRunnerListener listener) {
 		final String taskId = task.toString();
 		task.setId(taskId);
-		this.listeners.put(taskId, new WeakReference<TaskRunnerListener>(listener));
+		this.listeners.put(taskId, listener);
 		Intent intent = new Intent(context, serviceClass);
 		intent.putExtra(Constants.EXTRA_KEY_RECEIVER, new ResultHandler(null));
 		intent.putExtra(Constants.EXTRA_KEY_TASK, task);
@@ -53,9 +52,9 @@ public class TaskRunner {
 
 		@Override
 		protected void onReceiveResult (int resultCode, Bundle resultData) {
-			Task task = resultData.getParcelable(Constants.EXTRA_KEY_TASK);
-			String taskId = task.getId();
-			TaskRunnerListener listener = listeners.get(taskId).get();
+			final Task task = resultData.getParcelable(Constants.EXTRA_KEY_TASK);
+			final String taskId = task.getId();
+			final TaskRunnerListener listener = listeners.get(taskId);
 			if(listener != null) {
 				if(resultCode == Constants.TASK_COMPLETED) {
 					listener.onTaskCompleted(resultData);
