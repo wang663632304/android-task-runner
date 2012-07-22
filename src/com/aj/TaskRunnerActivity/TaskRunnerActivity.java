@@ -22,10 +22,11 @@ public class TaskRunnerActivity extends Activity {
         setContentView(R.layout.main);
         
         taskRunner = TaskRunner.getInstance(getApplicationContext());
-        MyTask myTask1 = new MyTask(new Bundle());
-        MyTask myTask2 = new MyTask(new Bundle());
-        MyTask myTask3 = new MyTask(new Bundle());
-        MyTask myTask4 = new MyTask(new Bundle());
+        Bundle params = new Bundle();
+        MyTask myTask1 = new MyTask(params);
+        MyTask myTask2 = new MyTask(params);
+        MyTask myTask3 = new MyTask(params);
+        MyTask myTask4 = new MyTask(params);
         
         //Bundle params = new Bundle();
         //params.putString("url", "http://www.google.com");

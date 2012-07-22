@@ -8,6 +8,25 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 
+/**
+ * <h3>TaskRunner</h3>
+ * <div>Use TaskRunner.getInstance(Context) method to get singletone. </div> 
+ * <div>Then use runTask method. It takes three parametrs: task, intent service and listener. </div>
+ * <div>Example: </div>
+ * <pre>
+ * {@code
+ * TaskRunner taskRunner = TaskRunner.getInstance(getApplicationContext());
+ * 
+ * Bundle params = new Bundle();
+ * MyTask myTask = new MyTask(params);
+ * 
+ * MyListener myListener = new MyListener()
+ * 
+ * taskRunner.runTask(myTask, MyIntentService.class, myListener);
+ * } 
+ * </pre> 
+ */
+
 public class TaskRunner {
 	
 	public static final String TAG = TaskRunner.class.getName();
