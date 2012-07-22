@@ -29,14 +29,19 @@ public class TaskRunner {
 		this.listeners = new HashMap<String, TaskRunnerListener>();
 	}
 	
-	public void run(Task task, Class <?> serviceClass, TaskRunnerListener listener) {
+	public void runTask(Task task, Class <?> serviceClass, TaskRunnerListener listener) {
 		final String taskId = task.toString();
 		task.setId(taskId);
 		this.listeners.put(taskId, listener);
 		Intent intent = new Intent(context, serviceClass);
 		intent.putExtra(Constants.EXTRA_KEY_RECEIVER, new ResultHandler(null));
-		intent.putExtra(Constants.EXTRA_KEY_TASK, task);
+		intent.putExtra(Task.EXTRA_KEY_TASK, task);
 		context.startService(intent);
+	}
+	
+	public void stopService(Class <?> serviceClass) {
+		Intent intent = new Intent(context, serviceClass);
+		context.stopService(intent);
 	}
 	
 	public interface TaskRunnerListener {
@@ -52,15 +57,15 @@ public class TaskRunner {
 
 		@Override
 		protected void onReceiveResult (int resultCode, Bundle resultData) {
-			final Task task = resultData.getParcelable(Constants.EXTRA_KEY_TASK);
+			final Task task = resultData.getParcelable(Task.EXTRA_KEY_TASK);
 			final String taskId = task.getId();
 			final TaskRunnerListener listener = listeners.get(taskId);
 			if(listener != null) {
-				if(resultCode == Constants.TASK_COMPLETED) {
+				if(resultCode == Constants.RESULT_CODE_TASK_COMPLETED) {
 					listener.onTaskCompleted(resultData);
 					listeners.remove(taskId);
 				} 
-				if(resultCode == Constants.TASK_PROGRESS_UPDATED) {
+				if(resultCode == Constants.RESULT_CODE_TASK_PROGRESS_UPDATED) {
 					listener.onTaskProgressUpdated(resultData.getInt(Constants.EXTRA_KEY_PROGRESS_UPDATED));
 				}
 			}

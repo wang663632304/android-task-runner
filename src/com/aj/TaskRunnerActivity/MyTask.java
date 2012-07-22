@@ -34,8 +34,8 @@ public class MyTask extends Task {
         	StringBuffer buffer = new StringBuffer();
         	for(int i = 0; i < size; i++) {
         		try {
-        			Thread.sleep(100);
-        			buffer.append("A");
+        			Thread.sleep(1000);
+        			buffer.append(i);
             		progressListener.onProgressUpdate(i, task);
         		} catch(Exception e){
         			Log.e(TAG, "Thread interrupt exception was thrown");

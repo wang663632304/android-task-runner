@@ -1,9 +1,7 @@
 package com.aj.TaskRunnerActivity;
 
-import com.aj.TaskRunner.Constants;
 import com.aj.TaskRunner.Task;
 import com.aj.TaskRunner.TaskRunner;
-import com.aj.TaskRunner.TaskRunnerIntentService;
 import com.aj.TaskRunner.TaskRunner.TaskRunnerListener;
 import com.aj.projects.net.R;
 
@@ -24,26 +22,33 @@ public class TaskRunnerActivity extends Activity {
         setContentView(R.layout.main);
         
         taskRunner = TaskRunner.getInstance(getApplicationContext());
-        //taskRunner.run(new MyTask());
-        Bundle params = new Bundle();
-        params.putString("url", "http://www.google.com");
-        taskRunner.run(new HttpGetRequest(params), MyIntentService.class, new MyListener1());
-        taskRunner.run(new MyTask(new Bundle()), MyIntentService.class, new MyListener1());
-        taskRunner.run(new MyTask(new Bundle()), MyIntentService.class, new MyListener2());
-        taskRunner.run(new MyTask(new Bundle()), TaskRunnerIntentService.class, new MyListener1());
-        taskRunner.run(new MyTask(new Bundle()), TaskRunnerIntentService.class, new MyListener2());
+        MyTask myTask1 = new MyTask(new Bundle());
+        MyTask myTask2 = new MyTask(new Bundle());
+        MyTask myTask3 = new MyTask(new Bundle());
+        MyTask myTask4 = new MyTask(new Bundle());
+        
+        //Bundle params = new Bundle();
+        //params.putString("url", "http://www.google.com");
+        //HttpGetRequest getRequest = new HttpGetRequest(params);
+        //taskRunner.runTask(getRequest, MyIntentService.class, new MyListener1());
+        
+        taskRunner.runTask(myTask1, MyIntentService.class, new MyListener1());
+        taskRunner.runTask(myTask2, MyIntentService.class, new MyListener2());
+        taskRunner.runTask(myTask3, MyIntentService.class, new MyListener1());
+        taskRunner.runTask(myTask4, MyIntentService.class, new MyListener2());
     }
     
     @Override
     protected void onDestroy() {
     	super.onDestroy();
     	Log.d(TAG, "On Destroy is called");
+    	//taskRunner.stopService(MyIntentService.class);
     }
     
     private class MyListener1 implements TaskRunnerListener {
     	@Override
     	public void onTaskCompleted(Bundle result) {
-    		Task task = result.getParcelable(Constants.EXTRA_KEY_TASK);
+    		Task task = result.getParcelable(Task.EXTRA_KEY_TASK);
     		Bundle taskResult = task.getResultBundle();
     		String myString = taskResult.getString("my_result");
     		Log.d(TAG, "Result recieved by Listener 1: " + myString);
@@ -58,7 +63,7 @@ public class TaskRunnerActivity extends Activity {
     private class MyListener2 implements TaskRunnerListener {
     	@Override
     	public void onTaskCompleted(Bundle result) {
-    		Task task = result.getParcelable(Constants.EXTRA_KEY_TASK);
+    		Task task = result.getParcelable(Task.EXTRA_KEY_TASK);
     		Bundle taskResult = task.getResultBundle();
     		String myString = taskResult.getString("my_result");
     		Log.d(TAG, "Result recieved by Listener 2: " + myString);

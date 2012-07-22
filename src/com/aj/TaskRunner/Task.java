@@ -7,6 +7,8 @@ import android.os.Parcelable;
 public abstract class Task implements Parcelable {
 	
 	public static final String TAG = Task.class.getName();
+	
+	public static final String EXTRA_KEY_TASK = Task.class.getName() + "task";
 
 	
 	private Bundle result;
