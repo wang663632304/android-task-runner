@@ -33,17 +33,17 @@ public class TaskRunnerActivity extends Activity {
         //HttpGetRequest getRequest = new HttpGetRequest(params);
         //taskRunner.runTask(getRequest, MyIntentService.class, new MyListener1());
         
-        taskRunner.runTask(myTask1, MyIntentService.class, new MyListener1());
-        taskRunner.runTask(myTask2, MyIntentService.class, new MyListener2());
-        taskRunner.runTask(myTask3, MyIntentService.class, new MyListener1());
-        taskRunner.runTask(myTask4, MyIntentService.class, new MyListener2());
+        taskRunner.runTaskByService(myTask1, MyIntentService.class, new MyListener1());
+        taskRunner.runTaskByService(myTask2, MyIntentService.class, new MyListener2());
+        taskRunner.runTaskByService(myTask3, MyIntentService.class, new MyListener1());
+        taskRunner.runTaskByService(myTask4, MyIntentService.class, new MyListener2());
     }
     
     @Override
     protected void onDestroy() {
     	super.onDestroy();
     	Log.d(TAG, "On Destroy is called");
-    	//taskRunner.stopService(MyIntentService.class);
+    	taskRunner.stopService(MyIntentService.class);
     }
     
     private class MyListener1 implements TaskRunnerListener {
